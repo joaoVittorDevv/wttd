@@ -106,5 +106,5 @@ class SubscribeSuccessMessage(TestCase):
                      phone='47-99233-9463')
         response = self.client.post('/inscricao/', data, follow=True)
         expect =  'Inscrição realizada com sucesso! Um email de confirmação foi enviado, não se esqueça de ' \
-                  'verificar na caixa de spam'
+                  'verificar na caixa de spam.'
         self.assertContains(response, expect)

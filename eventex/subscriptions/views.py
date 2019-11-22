@@ -25,7 +25,7 @@ def subscribe(request):
                     ['contato@eventex.com', form.cleaned_data['email']]
             )
             message = 'Inscrição realizada com sucesso! Um email de confirmação foi enviado, não se esqueça de ' \
-                      'verificar na caixa de spam'
+                      'verificar na caixa de spam.'
             messages.success(request, message)
             return HttpResponseRedirect('/inscricao/')
         else:
