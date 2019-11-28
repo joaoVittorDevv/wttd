@@ -1,7 +1,5 @@
 language: python
-
 install:
-  - cp contrib/env-sample .env
   - pip install -q -r requirements.txt
 script:
   - python manage.py test
