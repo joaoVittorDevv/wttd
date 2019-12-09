@@ -4,6 +4,7 @@ from django.test import TestCase
 from eventex.subscriptions.models import Subscription
 from ..forms import SubscriptionForm
 
+
 class SubscribeGet(TestCase):
     def setUp(self):
     # url que esta sendo testada
@@ -52,8 +53,8 @@ class SubscribePostValid(TestCase):
         self.resp = self.client.post('/inscricao/', data)
 
     def test_post(self):
-        """Valid POST should redirect to /inscricao/"""
-        self.assertEqual(302,self.resp.status_code)
+        """Invalid POST should not redirect to /inscricao/1/"""
+        self.assertRedirects(self.resp, '/inscricao/1/')
 
     def test_send_subscribe_email(self):
         """Email is being sent"""
@@ -68,8 +69,8 @@ class SubscribePostInvalid(TestCase):
         self.resp = self.client.post('/inscricao/', {})
 
     def test_post(self):
-        """Invalid POST should not redirect"""
-        self.assertEqual(200, self.resp.status_code)
+        """Invalid POST should not redirect to /inscricao/1/"""
+        self.assertEqual(200,self.resp.status_code)
 
     def test_form_template(self):
         """Return form if invalid data"""
@@ -85,12 +86,3 @@ class SubscribePostInvalid(TestCase):
 
     def test_dont_save_subscription(self):
         self.assertFalse(Subscription.objects.exists())
-
-class SubscribeSuccessMessage(TestCase):
-    def test_message(self):
-        data = dict(name='João Vittor', cpf='00000000000',email='joaozao100@hotmail.com',
-                     phone='47-99233-9463')
-        response = self.client.post('/inscricao/', data, follow=True)
-        expect =  'Inscrição realizada com sucesso! Um email de confirmação foi enviado, não se esqueça de ' \
-                  'verificar na caixa de spam.'
-        self.assertContains(response, expect)
