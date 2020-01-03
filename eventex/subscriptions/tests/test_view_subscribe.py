@@ -1,6 +1,6 @@
 from django.core import mail
 from django.test import TestCase
-
+from django.shortcuts import resolve_url as r
 from eventex.subscriptions.models import Subscription
 from ..forms import SubscriptionForm
 
@@ -8,7 +8,7 @@ from ..forms import SubscriptionForm
 class SubscribeGet(TestCase):
     def setUp(self):
     # url que esta sendo testada
-        self.response = self.client.get('/inscricao/')
+        self.response = self.client.get(r('subscriptions:new'))
 
     def test_get(self):
     # codigo que ela deve retornar para ser exibida
@@ -43,18 +43,18 @@ class SubscribeGet(TestCase):
     def test_has_form(self):
         # testa se o form está sendo exibido
         """Form is not in instance"""
-        form = self.response.client.get('/inscricao/').context['form']
+        form = self.response.client.get(r('subscriptions:new')).context['form']
         self.assertIsInstance(form, SubscriptionForm)
 
 class SubscribePostValid(TestCase):
     def setUp(self):
         data = dict(name='João Vittor', cpf='00000000000',email='joaozao100@hotmail.com',
                      phone='47-99233-9463')
-        self.resp = self.client.post('/inscricao/', data)
+        self.resp = self.client.post(r('subscriptions:new'), data)
 
     def test_post(self):
         """Invalid POST should not redirect to /inscricao/1/"""
-        self.assertRedirects(self.resp, '/inscricao/1/')
+        self.assertRedirects(self.resp, r('subscriptions:detail', 1))
 
     def test_send_subscribe_email(self):
         """Email is being sent"""
@@ -66,7 +66,7 @@ class SubscribePostValid(TestCase):
 class SubscribePostInvalid(TestCase):
 
     def setUp(self):
-        self.resp = self.client.post('/inscricao/', {})
+        self.resp = self.client.post(r('subscriptions:new'), {})
 
     def test_post(self):
         """Invalid POST should not redirect to /inscricao/1/"""
